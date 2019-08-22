@@ -13,11 +13,11 @@ class views {
     }
 
     public function header(bool $dashboard = false) {
-        require $this->path . 'components/' . (!$dashboard ? 'header': 'header_2') . '.php';
+        require $this->path . 'components/' . (!$dashboard ? 'header': 'dashboard/header') . '.php';
     }
 
     public function footer(bool $dashboard = false) {
-        require $this->path . 'components/' . (!$dashboard ? 'footer': 'footer_2') . '.php';
+        require $this->path . 'components/' . (!$dashboard ? 'footer': 'dashboard/footer') . '.php';
     }
 
 }

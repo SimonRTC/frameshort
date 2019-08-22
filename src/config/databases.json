@@ -1,0 +1,11 @@
+{
+    "website": {
+      "host": "localhost",
+      "charset": "utf8",
+      "dbname": "sandbox",
+      "user": "root",
+      "password": null,
+      "_comment": " WARN : \"Options\" management is currently not taken into PDO",
+      "options": null
+    }
+}
