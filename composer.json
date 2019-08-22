@@ -1,0 +1,19 @@
+{
+    "name": "simon/framework",
+    "description": "Home made MVC framework for php",
+    "require-dev": {
+        "symfony/var-dumper": "^4.3"
+    },
+    "license": "GTL-3",
+    "authors": [
+        {
+            "name": "Simon Malpel (SimonOriginal)",
+            "email": "simon.malpel@orange.fr"
+        }
+    ],
+    "require": {
+        "bramus/router": "^1.4",
+        "doctrine/annotations": "^1.7",
+        "php-di/php-di": "^6.0"
+    }
+}

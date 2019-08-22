@@ -1,0 +1,7 @@
+[
+    {
+        "type": "GET|POST",
+        "pattern": "/",
+        "controller": "welcome"
+    }
+]
