@@ -3,5 +3,20 @@
         "type": "GET|POST",
         "pattern": "/",
         "controller": "welcome"
+    },
+    {
+        "type": "GET|POST",
+        "pattern": "/login",
+        "controller": "Auth"
+    },
+    {
+        "type": "GET|POST",
+        "pattern": "/register",
+        "controller": "Auth"
+    },
+    {
+        "type": "GET|POST",
+        "pattern": "/logout",
+        "controller": "Auth"
     }
 ]
