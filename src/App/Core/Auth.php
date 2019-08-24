@@ -35,6 +35,24 @@ class Auth {
         return $ipaddress;
     }
 
+    private function ThisFieldIsThisUsed(string $table, string $fields, array $datas): array { /* ! WARN ! : Need optimization for reduce database request */
+        $callback   = [];
+        $fields     = explode('|', $fields);
+        $db         = $this->db;
+        foreach ($fields as $i=>$field) {
+            $request        = $db()->query("SELECT * FROM `$table` WHERE `$field` LIKE '$datas[$i]'");
+            $responses      = $request->fetchAll();
+            foreach ($responses as $response) {
+                if ($response) {
+                    $callback = array_merge($callback, [ "$i" => $datas[$i] ]);
+                } else {
+                    $callback = array_merge($callback, [ "$i" => false ]);
+                }
+            }
+        }
+        return $callback;
+    }
+
     private function DeleteSession(int $session): bool {
         $db         = $this->db;
         $request    = $db()->prepare('DELETE FROM `auth_sessions` WHERE `session_id` =  :session');
@@ -104,13 +122,38 @@ class Auth {
         return $success;
     }
 
+    public function AddClient(array $Client): string {
+        if (!empty($Client)) {
+            $entrys = [];
+            foreach ($Client as $k=>$entry) { $entrys = array_merge($entrys, [ "$k" => htmlspecialchars($entry) ]); }
+            if (!empty($entrys['username']) && !empty($entrys['password']) && !empty($entrys['email'])) {
+                $AlreadyTaken = $this->ThisFieldIsThisUsed('auth_clients', 'username|email', [ $entrys['username'], $entrys['email'] ]);
+                if (empty($AlreadyTaken)) {
+                    $db = $this->db;
+                    $request = $db()->prepare('INSERT INTO `auth_clients` (`id`, `username`, `password`, `email`) VALUES (NULL, :username, :password, :email)');
+                    $request = $request->execute([
+                        'username'  => $entrys['username'],
+                        'password'  => hash('sha256', $entrys['password']),
+                        'email'     => $entrys['email']
+                    ]);
+                    if ($request) {
+                        return $entrys['username'];
+                    }
+                } else {
+                    return 'ALREADY_TAKEN';
+                }
+            }
+        }
+        return 'REGISTER_FAILED';
+    }
+
     public function GetUserByUsername(array $POST, bool $pswd = true): array {
         $callback   = false;
         $username   = (!empty($POST['username']) ? htmlspecialchars($POST['username']): false);
         $password   = (!empty($POST['password']) ? hash('sha256', htmlspecialchars($POST['password'])): false);
         $id         = (!empty($POST['id']) ? $POST['id']: false);
 
-        if ($username && $password || $id) {
+        if ($username && $password || $username && !$pswd || $id) {
             $db         = $this->db;
             $clients    = $db()->query('SELECT * FROM `auth_clients`');
             while ($data = $clients->fetch()) {

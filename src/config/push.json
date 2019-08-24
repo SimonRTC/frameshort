@@ -1,3 +1,5 @@
 {
-    "USER_LOGIN_ERROR": "Can not connect to your account Check the credentials entered in the login form and try again."
+    "USER_LOGIN_ERROR": "Can not connect to your account check the credentials entered in the login form and try again.",
+    "REGISTER_FAILED": "Please enter all the fields required for registration",
+    "ALREADY_TAKEN": "This username or email is already registered"
 }
