@@ -13,7 +13,6 @@
     ],
     "require": {
         "bramus/router": "^1.4",
-        "doctrine/annotations": "^1.7",
         "php-di/php-di": "^6.0",
         "visualappeal/php-auto-update": "^0.12.3"
     }
