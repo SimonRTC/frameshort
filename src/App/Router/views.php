@@ -29,10 +29,10 @@ class views {
     }
 
     public function ParseUrl(): array {
-        $URL    = explode('/', $_SERVER['PHP_SELF']);
+        $URL    = explode('/', $_SERVER['REQUEST_URI']);
         $R_URL  = [];
-        foreach ($URL as $i=>$URI) {
-            if ($i>1 && $URI != null) {
+        foreach ($URL as $URI) {
+            if (!empty($URI)) {
                 array_push($R_URL, $URI);
             }
         }
