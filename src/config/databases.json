@@ -2,7 +2,7 @@
     "website": {
       "host": "localhost",
       "charset": "utf8",
-      "dbname": "sandbox",
+      "dbname": "virtual-roleplay",
       "user": "root",
       "password": null,
       "_comment": " WARN : \"Options\" management is currently not taken into PDO",

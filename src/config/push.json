@@ -1,5 +1,6 @@
 {
     "USER_LOGIN_ERROR": "Can not connect to your account check the credentials entered in the login form and try again.",
     "REGISTER_FAILED": "Please enter all the fields required for registration",
-    "ALREADY_TAKEN": "This username or email is already registered"
+    "ALREADY_TAKEN": "This username or email is already registered",
+    "YOU_ARE_BANNED": "You are banned from this web site."
 }

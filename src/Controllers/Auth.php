@@ -52,8 +52,12 @@ class Auth extends \App\Core\Auth {
     private function login() {
         $user = $this->GetUserByUsername($this->PostedDatas);
         if ($user) {
-            $this->SetAuthUser($user);
-            header('Location: /');
+            $cb = $this->SetAuthUser($user);
+            if (!empty($cb)) {
+                header('Location: /');
+            } else {
+                $this->views->SetPushMessage('YOU_ARE_BANNED');
+            }
         } else {
             $this->views->SetPushMessage('USER_LOGIN_ERROR');
         }
@@ -64,8 +68,12 @@ class Auth extends \App\Core\Auth {
         if ($cb != 'ALREADY_TAKEN' && $cb != 'REGISTER_FAILED') {
             $user = $this->GetUserByUsername([ 'username' => $cb ], false);
             if ($user) {
-                $this->SetAuthUser($user);
-                header('Location: /');
+                $cb = $this->SetAuthUser($user);
+                if (!empty($cb)) {
+                    header('Location: /');
+                } else {
+                    $this->views->SetPushMessage('YOU_ARE_BANNED');
+                }
             } else {
                 $this->views->SetPushMessage('REGISTER_FAILED');
             }

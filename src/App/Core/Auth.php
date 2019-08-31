@@ -156,26 +156,35 @@ class Auth {
         if ($username && $password || $username && !$pswd || $id) {
             $db         = $this->db;
             $clients    = $db()->query('SELECT * FROM `auth_clients`');
-            while ($data = $clients->fetch()) {
-                if ($data['username'] == $username || $data['email'] == $username || $data['id'] == $id) {
-                    $user = $data;
-                    break;
+            if ($clients) {
+                while ($data = $clients->fetch()) {
+                    if ($data['username'] == $username || $data['email'] == $username || $data['id'] == $id) {
+                        $user = $data;
+                        break;
+                    }
                 }
-            }
-            if (!empty($user) && $user) {
-                if ($data['password'] == $password || $pswd == false) {
-                    $callback = $user;
-                }   
+                if (!empty($user) && $user) {
+                    if ($data['password'] == $password || $pswd == false) {
+                        $callback = $user;
+                    }   
+                }
+            } else {
+                $callback = false;
             }
         }
 
         return (!$callback ? []: $callback);
     }
 
-    public function SetAuthUser(array $user): array {
-        $session = $this->CreateSessionId();
-        $this->AddSessionToDatabase($session, $user);
-        $this->AddSessionToClient($session);
+    public function SetAuthUser(array $user): ?array {
+        $user['banned'] = ($user['banned'] == 0 ? false: true);
+        if (!$user['banned']) {
+            $session = $this->CreateSessionId();
+            $this->AddSessionToDatabase($session, $user);
+            $this->AddSessionToClient($session);
+        } else {
+            $user = null;
+        }
         return $user;
     }
 
