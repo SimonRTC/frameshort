@@ -61,13 +61,13 @@ class Auth extends \App\Core\Auth {
 
     public function register() {
         $cb = $this->AddClient($this->PostedDatas);
-        if ($cb != 'ALREADY_TAKEN' || $cb != 'REGISTER_FAILED') {
+        if ($cb != 'ALREADY_TAKEN' && $cb != 'REGISTER_FAILED') {
             $user = $this->GetUserByUsername([ 'username' => $cb ], false);
             if ($user) {
                 $this->SetAuthUser($user);
                 header('Location: /');
             } else {
-                $this->views->SetPushMessage('USER_LOGIN_ERROR');
+                $this->views->SetPushMessage('REGISTER_FAILED');
             }
         } else {
             $this->views->SetPushMessage($cb);
