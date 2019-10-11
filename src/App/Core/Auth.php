@@ -53,14 +53,14 @@ class Auth {
         return $callback;
     }
 
-    private function DeleteSession(int $session): bool {
+    public function DeleteSession(int $session): bool {
         $db         = $this->db;
         $request    = $db()->prepare('DELETE FROM `auth_sessions` WHERE `session_id` =  :session');
         $request    ->execute([ 'session' => $session ]);
         return (!$request? false: true);
     }
 
-    private function GetSessions(int $session = null, bool $lite = true): array {
+    public function GetSessions(int $session = null, bool $lite = true): array {
         $db         = $this->db;
         $sessions   = $db()->query('SELECT * FROM `auth_sessions`');
         $browse     = true;
