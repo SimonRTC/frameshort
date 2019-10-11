@@ -4,7 +4,8 @@
     require $path.'/autoload.php';
 
     foreach ($Configuration->routes as $rts) {
-        $router->match($rts['type'], $rts['pattern'], function($slug = null) use ($route, $rts) { ($route->load($rts['controller']))->index($_SERVER['REQUEST_METHOD'], (!empty($slug)? $slug: null)); });
+        [ $rts['controller'], $rts['function'] ] = explode('::', $rts['controller']);
+        $router->match($rts['type'], $rts['pattern'], function($slug = null) use ($route, $rts) { ($route->load($rts['controller']))->{$rts['function']}($_SERVER['REQUEST_METHOD'], (!empty($slug)? $slug: null)); });
     }
 
     $router->set404(function() use ($route) { ($route->load('Errors'))->NotFound(); });

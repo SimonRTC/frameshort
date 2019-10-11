@@ -2,21 +2,21 @@
     {
         "type": "GET|POST",
         "pattern": "/",
-        "controller": "welcome"
+        "controller": "welcome::index"
     },
     {
         "type": "GET|POST",
         "pattern": "/login",
-        "controller": "Auth"
+        "controller": "Auth::index"
     },
     {
         "type": "GET|POST",
         "pattern": "/register",
-        "controller": "Auth"
+        "controller": "Auth::index"
     },
     {
         "type": "GET|POST",
         "pattern": "/logout",
-        "controller": "Auth"
+        "controller": "Auth::index"
     }
 ]
