@@ -2,7 +2,7 @@
 
     require realpath(__DIR__ . '/..') . '/src/autoload.php';
 
-    $auth           = new \App\Core\Auth((new \App\Databases));
+    $auth           = new \App\Core\Auth(new \App\Databases(new \App\Configuration));
     $sessions       = $auth->GetSessions(null, false);
     $CurrentDate    = strtotime(date('Y-m-d H:i:s'));
 
