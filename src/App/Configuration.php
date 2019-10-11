@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Symfony\Component\Yaml\Yaml;
+
 class Configuration {
 
     public $routes;
@@ -11,8 +13,8 @@ class Configuration {
     }
     
     private function GetRoutes(): array {
-        $parse = file_get_contents( realpath(__DIR__ . '/..') . '/config/routes.json' );
-        $parse = json_decode($parse, true);
+        $parse = file_get_contents( realpath(__DIR__ . '/..') . '/config/routes.yaml' );
+        $parse = Yaml::parse($parse);
         return (!$parse? []: $parse);
     }
     

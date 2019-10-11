@@ -1,0 +1,17 @@
+---
+
+- type: GET|POST
+  pattern: "/"
+  controller: Welcome::index
+
+- type: GET|POST
+  pattern: "/login"
+  controller: Auth::index
+
+- type: GET|POST
+  pattern: "/register"
+  controller: Auth::index
+  
+- type: GET|POST
+  pattern: "/logout"
+  controller: Auth::index
