@@ -2,7 +2,7 @@
     {
         "type": "GET|POST",
         "pattern": "/",
-        "controller": "welcome::index"
+        "controller": "Welcome::index"
     },
     {
         "type": "GET|POST",

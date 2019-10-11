@@ -41,6 +41,7 @@ class views {
 
     public function load(string $view) {
         $G  = $this->LoadDefaultVariables();
+        ($G['Pusher']->IsNotificationInStandBy()? require $this->path . 'components/pusher.php': null);
         require $this->path . 'views/' . $view . '.php';
     }
 
