@@ -1,5 +1,5 @@
 {
-    "name": "simon/framework",
+    "name": "SimonRTC/framework",
     "description": "Home made MVC framework for php",
     "require-dev": {
         "symfony/var-dumper": "^4.3"
@@ -7,13 +7,12 @@
     "license": "GPL-3",
     "authors": [
         {
-            "name": "Simon Malpel (SimonOriginal)",
+            "name": "Simon Malpel (SimonRTC)",
             "email": "simon.malpel@orange.fr"
         }
     ],
     "require": {
         "bramus/router": "^1.4",
-        "php-di/php-di": "^6.0",
-        "visualappeal/php-auto-update": "^0.12.3"
+        "php-di/php-di": "^6.0"
     }
 }
