@@ -39,8 +39,9 @@ class views {
         return $R_URL;
     }
 
-    public function load(string $view) {
-        $G  = $this->LoadDefaultVariables();
+    public function load(string $view, array $data = null) {
+        $data   = (!empty($data)? $data: false);
+        $G      = $this->LoadDefaultVariables();
         ($G['Pusher']->IsNotificationInStandBy()? require $this->path . 'components/pusher.php': null);
         require $this->path . 'views/' . $view . '.php';
     }
