@@ -1,5 +1,5 @@
 {
-    "name": "SimonRTC/framework",
+    "name": "simonrtc/framework",
     "description": "Home made MVC framework for php",
     "require-dev": {
         "symfony/var-dumper": "^4.3"
