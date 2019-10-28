@@ -39,7 +39,6 @@ class views {
         $data       = (!empty($data)? $data: false);
         $G          = $this->LoadDefaultVariables();
         $opened     = $this->path . 'components'. (!empty($this->Subsite)? '/' . $this->Subsite: null) .'/pusher.php';
-        ($G['Pusher']->IsNotificationInStandBy()? require $opened: null);
         if (file_exists($opened)) { ($G['Pusher']->IsNotificationInStandBy()? require $opened: null); }
         $opened2    = $this->path . 'views/' . $view . '.php';
         if (file_exists($opened2)) { require $opened2; return true; }
