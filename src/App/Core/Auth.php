@@ -23,24 +23,22 @@ class Auth {
         return $request->getClientIp();
     }
 
-    private function ThisFieldIsThisUsed(string $table, string $fields, array $datas): array { /* ! WARN ! : Need optimization for reduce database request */
+    private function ThisFieldIsThisUsed(string $table, string $fields, array $datas): ?array {
         $callback   = [];
         $fields     = explode('|', $fields);
         $db         = $this->db;
-        foreach ($fields as $i=>$field) {
-            $request        = $db()->query("SELECT * FROM `$table` WHERE `$field` LIKE '$datas[$i]'");
-            $responses      = $request->fetchAll();
-            foreach ($responses as $response) {
-                if ($response) {
-                    $callback = array_merge($callback, [ "$i" => $datas[$i] ]);
-                } else {
-                    $callback = array_merge($callback, [ "$i" => false ]);
+        $request    = $db()->query("SELECT * FROM `$table`");
+        $responses  = $request->fetchAll();
+        foreach ($responses as $response) {
+            foreach ($fields as $i=>$field) {
+                if (isset($response[$field]) && !empty($response[$field]) && $response[$field] == $datas[$i]) {
+                    $callback = array_merge($callback, [ "$field" => true ]);
                 }
             }
         }
         return $callback;
     }
-
+    
     public function DeleteSession(int $session): bool {
         $db         = $this->db;
         $request    = $db()->prepare('DELETE FROM `auth_sessions` WHERE `session_id` =  :session');
@@ -143,7 +141,8 @@ class Auth {
 
         if ($username && $password || $username && !$pswd || $id) {
             $db         = $this->db;
-            $clients    = $db()->query('SELECT * FROM `auth_clients`');
+            $clients    = $db()->prepare('SELECT * FROM `auth_clients` WHERE ' . (!$id? 'username = :username OR email = :email': 'id = :id'));
+            $clients->execute((!$id? [ 'username' => $username, 'email' => $username ]: [ 'id' => $id ]));
             if ($clients) {
                 while ($data = $clients->fetch()) {
                     if ($data['username'] == $username || $data['email'] == $username || $data['id'] == $id) {
@@ -160,7 +159,6 @@ class Auth {
                 $callback = false;
             }
         }
-
         return (!$callback ? []: $callback);
     }
 
