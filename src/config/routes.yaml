@@ -1,17 +1,24 @@
 ---
 
-- type: GET|POST
+- host: false
+  type: GET|POST
   pattern: "/"
   controller: Welcome::index
 
-- type: GET|POST
+- host: false
+  type: GET|POST
   pattern: "/login"
-  controller: Auth::index
+  controller: Auth::signin
+  subsite: null
 
-- type: GET|POST
+- host: false
+  type: GET|POST
   pattern: "/register"
-  controller: Auth::index
+  controller: Auth::signup
+  subsite: null
   
-- type: GET|POST
+- host: false
+  type: GET
   pattern: "/logout"
-  controller: Auth::index
+  controller: Auth::SessionLogout
+  subsite: null

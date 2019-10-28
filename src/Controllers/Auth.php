@@ -17,36 +17,38 @@ class Auth extends \App\Core\Auth {
         $this->PostedDatas  = (isset($_POST) && !empty($_POST)? $_POST: false);
     }
 
-    public function index($method) {
-        $URL = $this->views->ParseUrl();
-
-        if ($URL[0] == 'logout') { $this->CurrentSessionLogout(); }
-
+    public function signin($subsite, $method) {
         if (empty($this->views->ClientAuth)) {
-
-            if ($URL[0] == 'login') { // --> Dont forget to change this value if you edit routes.json
-                ($method == 'POST'? $this->login(): null);
-                $view = function($view) { return $this->views->load('Auth/Login'); };
-                
-            } elseif ($URL[0] == 'register') {  // --> Dont forget to change this value if you edit routes.json
-                ($method == 'POST'? $this->register(): null);
-                $view = function($view) { return $this->views->load('Auth/Register'); };
-            }
-
-            $this->views->header();
-            $view($this->view);
-            $this->views->footer();
-
+            $this->views->SetSubsite($subsite);
+            ($method == 'POST'? $this->login(): null);
+            $this->CreateView('Auth/Login');
         } else {
             header('Location: /');
         }
-
     }
 
-    private function CurrentSessionLogout() {
+    public function signup($subsite, $method) {
+        if (empty($this->views->ClientAuth)) {
+            $this->views->SetSubsite($subsite);
+            ($method == 'POST'? $this->register(): null);
+            $this->CreateView('Auth/Register');
+        } else {
+            header('Location: /');
+        }
+    }
+
+    public function SessionLogout(): bool {
         $auth = $this->Auth;
         $auth->Logout(((int)$_COOKIE['SESSION']));
         header('Location: /');
+        return true;
+    }
+
+    public function CreateView($view): bool {
+        $this->views->header();
+        $cb = $this->views->load($view);
+        $this->views->footer();
+        return $cb;
     }
 
     private function login() {
