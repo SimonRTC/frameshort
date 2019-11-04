@@ -11,6 +11,7 @@ class views {
     public $ClientAuth;
     public $Subsite;
     public $bufferisation;
+    public $data;
 
     public function __construct(\App\Pusher $Pusher, \App\Core\Auth $Auth) {
         $this->path             = realpath(__DIR__ . '/../..').'/';
@@ -19,6 +20,7 @@ class views {
         $this->Pusher           = $Pusher;
         $this->Buffer           = [];
         $this->bufferisation    = false;
+        $this->data             = null;
         $this->ClientAuth       = $this->CheckAuth();
     }
 
@@ -40,48 +42,26 @@ class views {
     }
 
     public function load(string $view, array $data = null) {
-        $data       = (!empty($data)? $data: false);
-        $G          = $this->LoadDefaultVariables();
-        $opened     = $this->path . 'components'. (!empty($this->Subsite)? '/' . $this->Subsite: null) .'/pusher.php';
-        if (file_exists($opened)) {
-            if ($G['Pusher']->IsNotificationInStandBy()) {
-                if ($this->bufferisation) {
-                    $this->Bufferisation($opened);
-                } else {
-                    require $opened;
-                }
-            }
-        }
-        $opened2    = $this->path . 'views/' . $view . '.php';
-        if (file_exists($opened2)) { 
-            if ($this->bufferisation) {
-                $this->Bufferisation($opened2);
-            } else {
-                require $opened2;
-            }
+        (!$this->bufferisation? $G = $this->LoadDefaultVariables(): null);
+        $this->data = (!empty($data)? $data: false);
+        $path       = $this->path . 'views/' . $view . '.php';
+        if (file_exists($path)) { 
+            ($this->bufferisation? $this->Bufferisation($path): require $path);
             return true;
          }
         return false;
     }
 
     public function header() {
-        $G      = $this->LoadDefaultVariables();
-        $path   = $this->path . 'components'. (!empty($this->Subsite)? '/' . $this->Subsite: null) .'/header.php';
-        if ($this->bufferisation) {
-            $this->Bufferisation($path);
-        } else {
-            require $path;
-        }
+        (!$this->bufferisation? $G = $this->LoadDefaultVariables(): null);
+        $path = $this->path . 'components'. (!empty($this->Subsite)? '/' . $this->Subsite: null) .'/header.php';
+        ($this->bufferisation? $this->Bufferisation($path): require $path);
     }
 
     public function footer() {
-        $G  = $this->LoadDefaultVariables();
+        (!$this->bufferisation? $G = $this->LoadDefaultVariables(): null);
         $path = $this->path . 'components'. (!empty($this->Subsite)? '/' . $this->Subsite: null) .'/footer.php';
-        if ($this->bufferisation) {
-            $this->Bufferisation($path);
-        } else {
-            require $path;
-        }
+        ($this->bufferisation? $this->Bufferisation($path): require $path);
     }
 
     public function Display() {
@@ -100,9 +80,10 @@ class views {
     private function Bufferisation($path) {
         $Buffer = new \App\Core\Buffer;
         $Buffer->Prepare('require');
+        $Buffer->Inject([ 'G' => $this->LoadDefaultVariables(), 'data' => $this->data ]);
         $Buffer->SetOptions([ 'path' => $path ]);
         $Buffer->Start();
-        array_push($this->Buffer, function() use ($Buffer) { $Buffer->Show(); });
+        array_push($this->Buffer, function() use ($Buffer) { $Buffer->Show(null); });
     }
 
 }

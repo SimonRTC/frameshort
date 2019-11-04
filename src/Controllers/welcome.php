@@ -13,9 +13,14 @@ class welcome {
     }
 
     public function index() {
+
+        $this->views->bufferisation = true;
+
         $this->views->header();
         $this->views->load('welcome');
         $this->views->footer();
+
+        $this->views->Display();
     }
 
 }
