@@ -45,7 +45,9 @@ class views {
         (!$this->bufferisation? $G = $this->LoadDefaultVariables(): null);
         $this->data = (!empty($data)? $data: false);
         $path       = $this->path . 'views/' . $view . '.php';
-        if (file_exists($path)) { 
+        $pusher     = $this->path . 'components'. (!empty($this->Subsite)? '/' . $this->Subsite: null) .'/pusher.php';
+        if (file_exists($path) && file_exists($pusher)) { 
+            ($this->Pusher->IsNotificationInStandBy()? ($this->bufferisation? $this->Bufferisation($pusher): require $pusher): null);
             ($this->bufferisation? $this->Bufferisation($path): require $path);
             return true;
          }
