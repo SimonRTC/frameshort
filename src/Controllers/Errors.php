@@ -5,31 +5,15 @@ namespace Controllers;
 class Errors {
 
     private $views;
-    private $ErrorsViews;
     
     public function __construct(\App\Router\views $views) {
-        $this->views        = $views;
-        $this->ErrorsViews  = [
-            'NotFound'  => 'Errors/404',
-            'Forbidden' => 'Errors/403'
-        ];
-    }
-
-    public function Forbidden() {
-        http_response_code(403);
-        $this->CreateView('Forbidden');
+        $this->views = $views;
     }
 
     public function NotFound() {
         http_response_code(404);
-        $this->CreateView('NotFound');
+        $this->views->Create('Errors/404');
     }
-
-    private function CreateView(string $view) { 
-        $this->views->header();
-        $this->views->load($this->ErrorsViews[$view]);
-        $this->views->footer();
-     }
 
 }
 
