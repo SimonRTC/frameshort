@@ -8,33 +8,25 @@ class Auth extends \App\Core\Auth {
     private $Databases;
     private $Auth;
     private $view;
-    private $PostedDatas;
     
     public function __construct(\App\Router\views $views,  \App\Databases $Databases, \App\Core\Auth $Auth) {
         $this->db           = function() use ($Databases) { return $Databases->PDO($Databases->databases['website']); };
         $this->views        = $views;
         $this->Auth         = $Auth;
-        $this->PostedDatas  = (isset($_POST) && !empty($_POST)? $_POST: false);
     }
 
     public function signin($subsite, $method) {
-        if (empty($this->views->ClientAuth)) {
-            $this->views->SetSubsite($subsite);
-            ($method == 'POST'? $this->login(): null);
-            $this->CreateView('Auth/Login');
-        } else {
-            header('Location: /');
-        }
+        $this->views->SetProtectedPage(false, '/');
+        $this->views->SetSubsite($subsite);
+        ($method == 'POST'? $this->login(): null);
+        $this->views->Create('Auth/Login');
     }
 
     public function signup($subsite, $method) {
-        if (empty($this->views->ClientAuth)) {
-            $this->views->SetSubsite($subsite);
-            ($method == 'POST'? $this->register(): null);
-            $this->CreateView('Auth/Register');
-        } else {
-            header('Location: /');
-        }
+        $this->views->SetProtectedPage(false, '/');
+        $this->views->SetSubsite($subsite);
+        ($method == 'POST'? $this->register(): null);
+        $this->views->Create('Auth/Register');
     }
 
     public function SessionLogout(): bool {
@@ -44,29 +36,22 @@ class Auth extends \App\Core\Auth {
         return true;
     }
 
-    public function CreateView($view): bool {
-        $this->views->header();
-        $cb = $this->views->load($view);
-        $this->views->footer();
-        return $cb;
-    }
-
     private function login() {
-        $user = $this->GetUserByUsername($this->PostedDatas);
+        $user = $this->GetUserByUsername($_POST);
         if ($user) {
             $cb = $this->SetAuthUser($user);
             if (!empty($cb)) {
                 header('Location: /');
             } else {
-                $this->views->SetPushMessage('YOU_ARE_BANNED');
+                $this->views->Pusher->SetNotification('YOU_ARE_BANNED');
             }
         } else {
-            $this->views->SetPushMessage('USER_LOGIN_ERROR');
+            $this->views->Pusher->SetNotification('USER_LOGIN_ERROR');
         }
     }
 
     public function register() {
-        $cb = $this->AddClient($this->PostedDatas);
+        $cb = $this->AddClient($_POST);
         if ($cb != 'ALREADY_TAKEN' && $cb != 'REGISTER_FAILED') {
             $user = $this->GetUserByUsername([ 'username' => $cb ], false);
             if ($user) {
@@ -74,13 +59,13 @@ class Auth extends \App\Core\Auth {
                 if (!empty($cb)) {
                     header('Location: /');
                 } else {
-                    $this->views->SetPushMessage('YOU_ARE_BANNED');
+                    $this->views->Pusher->SetNotification('YOU_ARE_BANNED');
                 }
             } else {
-                $this->views->SetPushMessage('REGISTER_FAILED');
+                $this->views->Pusher->SetNotification('REGISTER_FAILED');
             }
         } else {
-            $this->views->SetPushMessage($cb);
+            $this->views->Pusher->SetNotification($cb);
         }
     }
 

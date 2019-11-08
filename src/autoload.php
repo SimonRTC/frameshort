@@ -1,11 +1,6 @@
 <?php
 
-    $path = realpath(__DIR__ . '/..');
-
-    require $path . '/vendor/autoload.php';
-    require $path . '/src/App/autoloader.php';
-
-    Autoloader::register();
+    require realpath(__DIR__ . '/..') . '/vendor/autoload.php';
 
     $containerBuilder       = new \DI\ContainerBuilder();
     $containerBuilder       ->useAutowiring(true);

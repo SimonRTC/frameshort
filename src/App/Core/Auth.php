@@ -9,20 +9,49 @@ class Auth {
 
     public $ClientAuth;
 
+    /**
+     * __construct
+     *
+     * @param  object $Databases
+     *
+     * @return void
+     */
     public function __construct(\App\Databases $Databases) {
         $this->db           = function() use ($Databases) { return $Databases->PDO($Databases->databases['website']); };
         $this->ClientAuth   = [];
     }
 
+    /**
+     * DatabaseEncoding
+     *
+     * @param  string $string
+     * @param  bool   $send
+     *
+     * @return string
+     */
     private function DatabaseEncoding(string $string, bool $send = true): string {
         return ($send ? (base64_encode($string)): (base64_decode($string)));
     }
 
+    /**
+     * GetCurrentClientIp
+     *
+     * @return string
+     */
     private function GetCurrentClientIp():string {
         $request = Request::createFromGlobals();
         return $request->getClientIp();
     }
 
+    /**
+     * ThisFieldIsThisUsed
+     *
+     * @param  string $table
+     * @param  string $fields
+     * @param  array  $datas
+     *
+     * @return array
+     */
     private function ThisFieldIsThisUsed(string $table, string $fields, array $datas): ?array {
         $callback   = [];
         $fields     = explode('|', $fields);
@@ -39,6 +68,13 @@ class Auth {
         return $callback;
     }
     
+    /**
+     * DeleteSession
+     *
+     * @param  int   $session
+     *
+     * @return bool
+     */
     public function DeleteSession(int $session): bool {
         $db         = $this->db;
         $request    = $db()->prepare('DELETE FROM `auth_sessions` WHERE `session_id` =  :session');
@@ -46,6 +82,14 @@ class Auth {
         return (!$request? false: true);
     }
 
+    /**
+     * GetSessions
+     *
+     * @param  mixed $session
+     * @param  bool  $lite
+     *
+     * @return array
+     */
     public function GetSessions(int $session = null, bool $lite = true): array {
         $db         = $this->db;
         $sessions   = $db()->query('SELECT * FROM `auth_sessions`');
@@ -63,6 +107,11 @@ class Auth {
         return $opened;
     }
 
+    /**
+     * GenerateRandomId
+     *
+     * @return int
+     */
     private function GenerateRandomId(): int {
         $id     = rand(1024, 65536);
         $id     .= rand(($id*6), ($id*16));
@@ -70,6 +119,11 @@ class Auth {
         return ((int)$id);
     }
 
+    /**
+     * CreateSessionId
+     *
+     * @return int
+     */
     private function CreateSessionId(): int {
         $browse     = true;
         $opened     = $this->GetSessions();
@@ -87,6 +141,14 @@ class Auth {
         return $random;
     }
 
+    /**
+     * AddSessionToDatabase
+     *
+     * @param  int   $session
+     * @param  array $user
+     *
+     * @return void
+     */
     private function AddSessionToDatabase(int $session, array $user) {
         $db         = $this->db;
         $expiry     = ((new \DateTime(date('Y-m-d H:i:s')))->add(new \DateInterval('P1D')));
@@ -100,6 +162,13 @@ class Auth {
         ]);
     }
 
+    /**
+     * AddSessionToClient
+     *
+     * @param  int $session
+     *
+     * @return bool
+     */
     private function AddSessionToClient(int $session): bool {
         $success = false;
         if (setcookie("SESSION", $session, time() + (86400 * 30), "/")) {
@@ -108,6 +177,13 @@ class Auth {
         return $success;
     }
 
+    /**
+     * AddClient
+     *
+     * @param  array $Client
+     *
+     * @return string
+     */
     public function AddClient(array $Client): string {
         if (!empty($Client)) {
             $entrys = [];
@@ -133,6 +209,14 @@ class Auth {
         return 'REGISTER_FAILED';
     }
 
+    /**
+     * GetUserByUsername
+     *
+     * @param  array $POST
+     * @param  bool  $pswd
+     *
+     * @return array
+     */
     public function GetUserByUsername(array $POST, bool $pswd = true): array {
         $callback   = false;
         $username   = (!empty($POST['username']) ? htmlspecialchars($POST['username']): false);
@@ -162,6 +246,13 @@ class Auth {
         return (!$callback ? []: $callback);
     }
 
+    /**
+     * SetAuthUser
+     *
+     * @param  array $user
+     *
+     * @return array
+     */
     public function SetAuthUser(array $user): ?array {
         $user['banned'] = ($user['banned'] == 0 ? false: true);
         if (!$user['banned']) {
@@ -174,6 +265,13 @@ class Auth {
         return $user;
     }
 
+    /**
+     * GetClient
+     *
+     * @param  int $session
+     *
+     * @return array
+     */
     public function GetClient(int $session): array {
         $id         = $this->GetSessions($session, false);
         $id         = (!empty($id) ? $id = $id[0]: $id = false);
@@ -188,6 +286,13 @@ class Auth {
         return $cb;
     }
 
+    /**
+     * Logout
+     *
+     * @param  int $session
+     *
+     * @return bool
+     */
     public function Logout(int $session): bool {
         $success = false;
         if (setcookie('SESSION', null, -1, '/')) {

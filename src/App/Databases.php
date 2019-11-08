@@ -7,15 +7,34 @@ class Databases {
     private $Configuration;
     public $databases;
     
+    /**
+     * __construct
+     *
+     * @param  object $Configuration
+     *
+     * @return void
+     */
     public function __construct(\App\Configuration $Configuration) {
         $this->Configuration    = $Configuration;
         $this->databases        = $this->GetDatabase();
     }
 
+    /**
+     * PDO
+     *
+     * @param  array $database
+     *
+     * @return object
+     */
     public function PDO(array $database): object {
         return new \PDO($database['dsn'], $database['username'], $database['password'], $database['options']);
     }
 
+    /**
+     * GetDatabase
+     *
+     * @return array
+     */
     private function GetDatabase(): array {
         $databases = $this->Configuration->Databases;
         foreach ($databases as $key=>$database) {
