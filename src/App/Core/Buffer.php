@@ -10,6 +10,11 @@ class Buffer {
     public $Buffer;
     private $Inject;
 
+    /**
+     * __construct
+     *
+     * @return void
+     */
     public function __construct() {
         $this->Action               = null;
         $this->Options              = null;
@@ -30,6 +35,13 @@ class Buffer {
         ];
     }
 
+    /**
+     * Prepare
+     *
+     * @param  string $name
+     *
+     * @return bool
+     */
     public function Prepare(string $name): bool {
         $call = null;
         foreach ($this->ActionsList as $act=>$listed) {
@@ -42,15 +54,34 @@ class Buffer {
         return (!empty($call)? true: false);
     }
 
+    /**
+     * Inject
+     *
+     * @param  array $datas
+     *
+     * @return void
+     */
     public function Inject(array $datas) {
         $this->Inject = $datas;
     }
 
+    /**
+     * SetOptions
+     *
+     * @param  array $options
+     *
+     * @return bool
+     */
     public function SetOptions(array $options): bool {
         $this->Options = $options;
         return true;
     }
 
+    /**
+     * Start
+     *
+     * @return bool
+     */
     public function Start(): bool {
         $cb = false;
         if (!empty($this->Action)) {
@@ -62,6 +93,13 @@ class Buffer {
         return ($cb? true: false);
     }
 
+    /**
+     * Show
+     *
+     * @param  mixed $content
+     *
+     * @return void
+     */
     public function Show($content = null): void {
         echo (!empty($content)? $content: $this->Buffer);
     }

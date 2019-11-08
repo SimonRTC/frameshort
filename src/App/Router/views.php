@@ -13,6 +13,14 @@ class views {
     public $data;
     public $ClientAuth;
 
+    /**
+     * __construct
+     *
+     * @param  object $Auth
+     * @param  object $Pusher
+     *
+     * @return void
+     */
     public function __construct(\App\Core\Auth $Auth, \App\Pusher $Pusher) {
         $this->path             = realpath(__DIR__ . '/../..').'/';
         $this->Subsite          = null;
@@ -25,6 +33,11 @@ class views {
         $this->ClientAuth       = $this->ClientAuth();
     }
 
+    /**
+     * ClientAuth
+     *
+     * @return array
+     */
     public function ClientAuth(): ?array {
         if (!empty($_COOKIE['SESSION'])) {
             $session = (int)$_COOKIE['SESSION'];
@@ -33,11 +46,26 @@ class views {
         return null;
     }
 
-    public function SetSubsite($subsite): bool {
+    /**
+     * SetSubsite
+     *
+     * @param  string $subsite
+     *
+     * @return bool
+     */
+    public function SetSubsite(?string $subsite): bool {
         $this->Subsite = $subsite;
         return true;
     }
 
+    /**
+     * load
+     *
+     * @param  string $view
+     * @param  array  $data
+     *
+     * @return void
+     */
     public function load(string $view, array $data = null) {
         $this->data = (!empty($data)? $data: false);
         $path       = $this->path . 'views/' . $view . '.php';
@@ -50,16 +78,34 @@ class views {
         return false;
     }
 
+    /**
+     * header
+     *
+     * @return void
+     */
     public function header() {
         $path = $this->path . 'components'. (!empty($this->Subsite)? '/' . $this->Subsite: null) .'/header.php';
         $this->Bufferisation($path);
     }
 
+    /**
+     * footer
+     *
+     * @return void
+     */
     public function footer() {
         $path = $this->path . 'components'. (!empty($this->Subsite)? '/' . $this->Subsite: null) .'/footer.php';
         $this->Bufferisation($path);
     }
 
+    /**
+     * Create
+     *
+     * @param  string $view
+     * @param  array  $datas
+     *
+     * @return void
+     */
     public function Create(string $view, ?array $datas = null) { 
         $this->header();
         $this->load($view, $datas);
@@ -67,11 +113,24 @@ class views {
         return $this->Call();
     }
 
+    /**
+     * SetProtectedPage
+     *
+     * @param  bool   $Protected
+     * @param  string $redirect
+     *
+     * @return void
+     */
     public function SetProtectedPage(bool $Protected, string $redirect = '/login') {
         $this->ProtectedPage    = $Protected;
         $this->Redirect         = $redirect;
     }
 
+    /**
+     * Call
+     *
+     * @return void
+     */
     public function Call() {
         if ($this->ProtectedPage == 'nothing-to-do' || $this->ProtectedPage == false && empty($this->ClientAuth) || $this->ProtectedPage == true && !empty($this->ClientAuth)) {
             foreach ($this->Buffer as $buffer) {
@@ -83,6 +142,11 @@ class views {
         }
     }
 
+    /**
+     * LoadDefaultVariables
+     *
+     * @return void
+     */
     private function LoadDefaultVariables() {
         return [
             'auth'          => $this->ClientAuth,
@@ -90,7 +154,14 @@ class views {
         ];
     }
 
-    private function Bufferisation($path) {
+    /**
+     * Bufferisation
+     *
+     * @param  string $path
+     *
+     * @return void
+     */
+    private function Bufferisation(string $path) {
         $Buffer = new \App\Core\Buffer;
         $Buffer->Prepare('require');
         $Buffer->Inject([ 'G' => $this->LoadDefaultVariables(), 'data' => $this->data ]);
