@@ -16,5 +16,12 @@
         "php-di/php-di": "^6.0",
         "symfony/yaml": "^4.3",
         "symfony/http-foundation": "^4.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/App",
+            "App\\CoreApp\\": "src/App/core",
+            "Controllers\\": "src/Controllers"
+        }
     }
 }
