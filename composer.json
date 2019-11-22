@@ -2,7 +2,7 @@
     "name": "simonrtc/frameshort",
     "description": "Home made MVC framework for php",
     "require-dev": {
-        "symfony/var-dumper": "^4.3"
+        "symfony/var-dumper": "^5.0"
     },
     "license": "GPL-3",
     "authors": [
