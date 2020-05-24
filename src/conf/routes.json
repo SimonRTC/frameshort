@@ -7,6 +7,6 @@
     {
         "method": "GET",
         "pattern": "/{TestName}",
-        "service": "Welcome::Welcosme"
+        "service": "Welcome::Welcome"
     }
 ]
