@@ -1,0 +1,20 @@
+{
+    "name": "simonrtc/frameshort",
+    "description": "A simple short PHP (MVC) framework",
+    "authors": [
+        {
+            "name": "Simon Malpel",
+            "email": "simon.malpel@orange.fr"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Frameshort\\": "src/Core/",
+            "Frameshort\\Services\\": "src/Services/"
+        }
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^5.0"
+    }
+}

@@ -1,0 +1,6 @@
+## Composer
+/vendor/
+composer.lock
+
+## Temporary files (logs, ...)
+/tmp/
