@@ -1,0 +1,12 @@
+[
+    {
+        "method": "GET",
+        "pattern": "/",
+        "service": "Welcome::Welcome"
+    },
+    {
+        "method": "GET",
+        "pattern": "/{TestName}",
+        "service": "Welcome::Welcome"
+    }
+]

@@ -1,0 +1,20 @@
+{
+    "name": "sketcher/docs",
+    "description": "Sketcher Cloud Inc. Documentation",
+    "authors": [
+        {
+            "name": "Simon Malpel",
+            "email": "simon.malpel@orange.fr"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "Sketcher\\": "src/Core/",
+            "Sketcher\\Services\\": "src/Services/"
+        }
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^5.0"
+    }
+}
