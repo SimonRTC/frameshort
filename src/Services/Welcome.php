@@ -12,7 +12,11 @@ class Welcome {
      * @return void
      */
     public function Welcome(\Frameshort\Response $Response, array $Binded = []): void {
-        $Response->load("welcome", $Binded);
+        $Response->load("welcome", $Binded, [
+            "function" => function () {
+                return 'Hello!!';
+            }
+        ]);
         return;
     }
 
