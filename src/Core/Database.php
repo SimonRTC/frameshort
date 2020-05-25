@@ -50,7 +50,7 @@ class Database {
      * @return void
      */
     public function Init(): void {
-        $this->PDO = new \PDO("mysql:host={$this->Database->host};dbname={$this->Database->database};charset={$this->Database->charset}", $this->Database->username, $this->Database->password);
+        $this->PDO = new \PDO("mysql:host={$this->Database->host};port={$this->Database->port};dbname={$this->Database->database};charset={$this->Database->charset}", $this->Database->username, $this->Database->password);
         return;
     }
     
