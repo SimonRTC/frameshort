@@ -11,7 +11,7 @@
     "autoload": {
         "psr-4": {
             "Frameshort\\": "src/Core/",
-            "Frameshort\\Services\\": "src/Services/"
+            "Frameshort\\Models\\": "src/Models/"
         }
     },
     "require-dev": {

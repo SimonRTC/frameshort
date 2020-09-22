@@ -39,7 +39,7 @@ class Router {
                     $this->Namespace = (isset($Route->namespace) && !empty($Route->namespace)? $Route->namespace: null);
                     $Road = function ($Response) use ($Route) {
                         [ $Service, $Callable ] = \explode("::", $Route->service);
-                        $Service    = "\Frameshort\Services\\{$Service}";
+                        $Service    = "\Frameshort\Models\\{$Service}";
                         $Road       = new $Service();
                         return $Road->{$Callable}($Response, $this->Binded);
                     };
@@ -113,7 +113,7 @@ class Router {
      */
     private function ThrowException(string $Exception): object {
         $Road = function ($Response) use ($Exception) {
-            return (new \Frameshort\Services\Exceptions)->Throw($Response, $Exception);
+            return (new \Frameshort\Models\Exceptions)->Throw($Response, $Exception);
         };
         return $Road;
     }

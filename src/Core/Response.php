@@ -8,7 +8,7 @@ class Response {
 
     public function __construct(?string $Service) {
         $this->Service  = $Service;
-        $this->Path     = \realpath( __PATH__ . "/src/Models/" . (!empty($this->Service)? "{$this->Service}/": null) );
+        $this->Path     = \realpath( __PATH__ . "/src/Views/" . (!empty($this->Service)? "{$this->Service}/": null) );
     }
     
     /**

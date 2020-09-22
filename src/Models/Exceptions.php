@@ -1,6 +1,6 @@
 <?php
 
-namespace Frameshort\Services;
+namespace Frameshort\Models;
 
 class Exceptions {
     

@@ -1,4 +1,25 @@
-<div class="container py-5">
-	<h1 class="text-center">Hello <?= (!empty($_DATAS_['TestName'])? $_DATAS_['TestName']: "world") ?>!</h1>
-	<p>Function as ruturned: <b><?= $_SCHEDULED_['function'] ?></b></p>
-</div>
+<?php
+
+namespace Frameshort\Models;
+
+class Welcome {
+        
+    /**
+     * Welcome page (Hello World!)
+     *
+     * @param  object $Response
+     * @param  array $Binded
+     * @return void
+     */
+    public function Welcome(\Frameshort\Response $Response, array $Binded = []): void {
+        $Response->load("welcome", $Binded, [
+            "function" => function () {
+                return 'Hello!!';
+            }
+        ]);
+        return;
+    }
+
+}
+
+?>
