@@ -12,6 +12,7 @@ class Router {
     private $Namespace;
     private $Service;
     private $Binded;
+    private $Cache;
 
     public function __construct(string $HttpHost, string $RequestMethod, string $RequestUri) {
         $this->HttpHost         = $HttpHost;
@@ -20,6 +21,7 @@ class Router {
         $this->Namespace        = null;
         $this->Binded           = [];
         $this->Routes           = \json_decode(\file_get_contents( __PATH__ . '/src/conf/routes.json' ), false);
+        $this->Cache            = new \Frameshort\Cache("ROUTES-RESPONSES", true);
 
         /* Load Requested Service */
         $this->Service          = $this->LoadService();
@@ -58,15 +60,27 @@ class Router {
      */
     private function RenderService(?object $Service = null, ?string $Namespace = null): void {
         $Service    = (!empty($Service)? $Service: $this->Service);
+        $HttpCode   = (!empty($Service)? 200: 404);
         $Service    = (!empty($Service)? $Service: $this->ThrowException("SERVICE_NOT_FOUND"));
         $Namespace  = (!empty($Namespace)? $Namespace: $this->Namespace);
         $Response   = new \Frameshort\Response($Namespace);
-        try {
-            $Service($Response);
-        } catch (\Throwable $e) {
-            $this->PushInLogFile($e);
-            $Throwed = $this->ThrowException("INTERNAL_SERVER_ERROR");
-            $Throwed($Response);
+        [ $Cached, $metadatas ] = $this->Cache->GetDatas("{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}");
+        if (empty($Cached)) {
+            try {
+                ob_start();
+                $Service($Response);
+                $datas = ob_get_clean();
+                $this->Cache->SetDatas("{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}", $datas, [ "HttpCode" => $HttpCode ]);
+            } catch (\Throwable $e) {
+                $this->PushInLogFile($e);
+                $Throwed = $this->ThrowException("INTERNAL_SERVER_ERROR");
+                $Throwed($Response);
+            }
+            http_response_code($HttpCode);
+            echo $datas;
+        } else {
+            http_response_code($metadatas->HttpCode);
+            echo $Cached;
         }
         return;
     }
