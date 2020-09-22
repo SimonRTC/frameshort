@@ -13,6 +13,7 @@ class Router {
     private $Service;
     private $Binded;
     private $Cache;
+    private $EnableCache;
 
     public function __construct(string $HttpHost, string $RequestMethod, string $RequestUri) {
         $this->HttpHost         = $HttpHost;
@@ -22,6 +23,7 @@ class Router {
         $this->Binded           = [];
         $this->Routes           = \json_decode(\file_get_contents( __PATH__ . '/src/conf/routes.json' ), false);
         $this->Cache            = new \Frameshort\Cache("ROUTES-RESPONSES", true);
+        $this->EnableCache      = false;
 
         /* Load Requested Service */
         $this->Service          = $this->LoadService();
@@ -38,8 +40,10 @@ class Router {
             $Route->method = \explode("|", $Route->method);
             if (in_array($this->RequestMethod, $Route->method)) {
                 if ($this->PatternMatched($Route->pattern)) {
-                    $this->Namespace = (isset($Route->namespace) && !empty($Route->namespace)? $Route->namespace: null);
-                    $Road = function ($Response) use ($Route) {
+                    $Route->cache       = (isset($Route->cache)? $Route->cache: false);
+                    $this->EnableCache  = $Route->cache;
+                    $this->Namespace    = (isset($Route->namespace) && !empty($Route->namespace)? $Route->namespace: null);
+                    $Road               = function ($Response) use ($Route) {
                         [ $Service, $Callable ] = \explode("::", $Route->service);
                         $Service    = "\Frameshort\Models\\{$Service}";
                         $Road       = new $Service();
@@ -70,7 +74,9 @@ class Router {
                 ob_start();
                 $Service($Response);
                 $datas = ob_get_clean();
-                $this->Cache->SetDatas("{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}", $datas, [ "HttpCode" => $HttpCode ]);
+                if ($this->EnableCache) {
+                    $this->Cache->SetDatas("{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}", $datas, [ "HttpCode" => $HttpCode ]);
+                }
             } catch (\Throwable $e) {
                 $this->PushInLogFile($e);
                 $Throwed = $this->ThrowException("INTERNAL_SERVER_ERROR");
