@@ -24,6 +24,11 @@ if (!realpath("./tmp/")) {
     echo "\n\e[34m > Temporary file as been created. \e[33m\n\n";
 }
 
+if (!realpath("./tmp/cache/")) {
+    mkdir("./tmp/cache/");
+    echo "\n\e[34m > Temporary file cache as been created. \e[33m\n\n";
+}
+
 /**
  * SQL Dump (file creation)
  */
