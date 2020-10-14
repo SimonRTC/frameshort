@@ -22,7 +22,7 @@ class Router {
         $this->Namespace        = null;
         $this->Binded           = [];
         $this->Routes           = \json_decode(\file_get_contents( __PATH__ . '/src/conf/routes.json' ), false);
-        $this->Cache            = new \Frameshort\Cache("ROUTES-RESPONSES", true);
+        $this->Cache            = new \Frameshort\Cache(".", true);
         $this->EnableCache      = false;
 
         /* Load Requested Service */
