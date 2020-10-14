@@ -22,14 +22,19 @@ class Response {
         $ModelPath = \realpath( $this->Path . "/" . trim($ModelName, "/") . ".php" );
         if (!empty($ModelPath) && $ModelPath !== false) {
             [ $header, $footer ] = $this->GetComponents();
-            $Sandbox = function () use ($header, $ModelPath, $footer, $Binded, $Schedule) {
-                $_DATAS_ = $Binded;
-                require (!empty($header)? $header: __PATH__ . "/src/Components/header.php");
-                $_SCHEDULED_ = $this->ScheduleObjects($Schedule);
-                require $ModelPath;
-                require (!empty($footer)? $footer: __PATH__ . "/src/Components/footer.php");
-            };
-            $Sandbox();
+
+            // Injected datas
+            $_DATAS_ = $Binded;
+
+            require (!empty($header)? $header: __PATH__ . "/src/Components/header.php");
+
+            // Scheduled datas
+            $_SCHEDULED_ = $this->ScheduleObjects($Schedule);
+
+            require $ModelPath;
+
+            require (!empty($footer)? $footer: __PATH__ . "/src/Components/footer.php");
+
         } else {
             http_response_code(500);
             echo "<b>FATAL INTERNAL ERROR</b>: Model \"{$ModelName}\" not found.";
