@@ -10,8 +10,8 @@
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "Frameshort\\": "src/Core/",
-            "Frameshort\\Models\\": "src/Models/"
+            "Frameshort\\": "src/Models/",
+            "Frameshort\\Controllers\\": "src/Controllers/"
         }
     },
     "require-dev": {
