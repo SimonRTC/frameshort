@@ -1,13 +1,22 @@
-[
-    {
-        "method": "GET",
-        "pattern": "/",
-        "service": "Welcome::Welcome",
-        "cache": true
-    },
-    {
-        "method": "GET",
-        "pattern": "/{TestName}",
-        "service": "Welcome::Welcome"
-    }
-]
+{
+    "default": [
+        {
+            "method": "GET",
+            "pattern": "/",
+            "service": "Welcome::Welcome",
+            "cache": false
+        },
+        {
+            "method": "GET",
+            "pattern": "/hey/{TestName}",
+            "service": "Welcome::Welcome"
+        }
+    ],
+    "hello-world": [
+        {
+            "method": "GET",
+            "pattern": "/",
+            "service": "Welcome::Welcome"
+        }
+    ]
+}

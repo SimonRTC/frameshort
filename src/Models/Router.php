@@ -36,7 +36,8 @@ class Router {
      * @return void
      */
     private function LoadService(): ?object {
-        foreach ($this->Routes as $Route) {
+        $Routes = $this->GetRealRoutes($this->Routes);
+        foreach ($Routes as $Route) {
             $Route->method = \explode("|", $Route->method);
             if (in_array($this->RequestMethod, $Route->method)) {
                 if ($this->PatternMatched($Route->pattern)) {
@@ -89,6 +90,14 @@ class Router {
             echo $Cached;
         }
         return;
+    }
+
+    private function GetRealRoutes(object $Routes): array {
+        $SubRoute           = \explode("/", $this->RequestUri);
+        $SubRoute           = (!empty($SubRoute[1])? $SubRoute[1]: null);
+        $SubRouter          = $Routes->{$SubRoute} ?? $Routes->default;
+        $this->RequestUri   = (!empty($Routes->{$SubRoute})? "/" . \trim(str_replace($SubRoute, null, $this->RequestUri), "/"): $this->RequestUri);
+        return $SubRouter;
     }
     
     /**
