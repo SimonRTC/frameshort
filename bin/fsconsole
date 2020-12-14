@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+    require __DIR__ . '/../src/autoload.php';
+    require __DIR__ . '/autoload.php';
+
+    [$namespace, $class]    = explode(":", $argv[1] ?? "console:help");
+    $function               = $argv[2] ?? "index";
+
+    $kernel = new \Console\Kernel;
+    $run    = "\\$namespace\\$class";  
+    
+    try {
+        $run = new $run($kernel, $kernel->GetArguments($argv));
+        $run = $run->{$function}();
+    } catch (\Throwable $e) {
+        $kernel->Trace("DANGER", $e->getMessage());
+    }
+
+?>
